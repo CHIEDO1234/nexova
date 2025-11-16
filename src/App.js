@@ -1,141 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Loader2, CheckCircle, Sparkles, Mail, User, Globe, MapPin } from 'lucide-react';
-
-// Inline styles object
-const styles = {
-  pageContainer: {
-    minHeight: '100vh',
-    background: 'linear-gradient(135deg, #1e293b 0%, #1e40af 50%, #1e293b 100%)',
-    padding: '20px'
-  },
-  centerContainer: {
-    minHeight: '100vh',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '20px'
-  },
-  maxWidth: {
-    maxWidth: '900px',
-    margin: '0 auto',
-    width: '100%'
-  },
-  card: {
-    background: 'white',
-    borderRadius: '16px',
-    padding: '40px',
-    boxShadow: '0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-    marginBottom: '30px'
-  },
-  header: {
-    background: '#0f172a',
-    borderBottom: '1px solid rgba(59, 130, 246, 0.2)',
-    padding: '20px',
-    boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)'
-  },
-  logo: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px'
-  },
-  logoText: {
-    fontSize: '28px',
-    fontWeight: 'bold',
-    color: 'white',
-    letterSpacing: '-0.5px'
-  },
-  button: {
-    padding: '14px 28px',
-    borderRadius: '8px',
-    border: 'none',
-    fontWeight: '600',
-    fontSize: '16px',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    display: 'flex',
-    alignItems: 'center',
-    gap: '8px',
-    justifyContent: 'center'
-  },
-  buttonPrimary: {
-    background: 'linear-gradient(to right, #2563eb, #1d4ed8)',
-    color: 'white',
-    boxShadow: '0 0 20px rgba(37, 99, 235, 0.3)'
-  },
-  buttonSecondary: {
-    background: '#e2e8f0',
-    color: '#334155'
-  },
-  buttonDisabled: {
-    background: '#cbd5e1',
-    color: '#94a3b8',
-    cursor: 'not-allowed'
-  },
-  input: {
-    width: '100%',
-    padding: '12px 12px 12px 44px',
-    border: '2px solid #cbd5e1',
-    borderRadius: '8px',
-    fontSize: '16px',
-    transition: 'border-color 0.2s',
-    outline: 'none'
-  },
-  select: {
-    width: '100%',
-    padding: '12px 12px 12px 44px',
-    border: '2px solid #cbd5e1',
-    borderRadius: '8px',
-    fontSize: '16px',
-    cursor: 'pointer',
-    outline: 'none',
-    background: 'white'
-  },
-  optionCard: {
-    padding: '16px',
-    border: '2px solid #e2e8f0',
-    borderRadius: '8px',
-    cursor: 'pointer',
-    transition: 'all 0.2s',
-    background: 'white'
-  },
-  optionCardSelected: {
-    border: '2px solid #2563eb',
-    background: '#eff6ff',
-    boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.1)'
-  },
-  progressBar: {
-    width: '100%',
-    height: '12px',
-    background: '#334155',
-    borderRadius: '999px',
-    overflow: 'hidden',
-    marginBottom: '30px'
-  },
-  progressFill: {
-    height: '100%',
-    background: 'linear-gradient(to right, #3b82f6, #60a5fa)',
-    transition: 'width 0.3s',
-    boxShadow: '0 0 10px rgba(59, 130, 246, 0.5)'
-  },
-  badge: {
-    display: 'inline-block',
-    padding: '6px 12px',
-    borderRadius: '999px',
-    fontSize: '14px',
-    fontWeight: '600',
-    marginTop: '8px'
-  },
-  grid2: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr))',
-    gap: '16px'
-  },
-  grid3: {
-    display: 'grid',
-    gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-    gap: '12px'
-  }
-};
 
 export default function NexovaApp() {
   const [currentView, setCurrentView] = useState('landing');
@@ -159,6 +23,19 @@ export default function NexovaApp() {
   });
   const [loading, setLoading] = useState(false);
   const [recommendations, setRecommendations] = useState(null);
+
+  // Save language to localStorage so it persists
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('nexova-language');
+    if (savedLanguage) {
+      setLanguage(savedLanguage);
+    }
+  }, []);
+
+  const handleLanguageChange = (newLanguage) => {
+    setLanguage(newLanguage);
+    localStorage.setItem('nexova-language', newLanguage);
+  };
 
   const languages = [
     { code: 'en', name: 'English', flag: '🇬🇧' },
@@ -201,8 +78,10 @@ export default function NexovaApp() {
       next: 'Next',
       tellUsIdea: 'Tell us about your business idea',
       ideaDescription: 'Describe your idea in detail. The more specific you are, the better recommendations we can provide.',
+      ideaPlaceholder: 'Example: I want to create an online platform...',
       charactersMin: 'characters (minimum 10)',
       categoryQuestion: 'What category best describes your business?',
+      describeBusiness: 'Describe your business category...',
       aboutYourself: 'Tell us about yourself',
       currentStatus: 'Your current status:',
       skillLevel: 'Your skill level:',
@@ -217,7 +96,12 @@ export default function NexovaApp() {
       recommendedTools: 'Recommended Tools',
       learningPath: 'Your Learning Path',
       nextSteps: 'Next Steps',
-      startOver: 'Start Over'
+      startOver: 'Start Over',
+      personalizedInsight: 'Personalized Insight:',
+      priority: 'Priority',
+      category: 'Category',
+      difficulty: 'Difficulty',
+      pricing: 'Pricing'
     },
     fr: {
       brand: 'Autonomiser la Prochaine Génération d\'Innovateurs',
@@ -244,8 +128,10 @@ export default function NexovaApp() {
       next: 'Suivant',
       tellUsIdea: 'Parlez-nous de votre idée d\'entreprise',
       ideaDescription: 'Décrivez votre idée en détail. Plus vous êtes précis, meilleures seront nos recommandations.',
+      ideaPlaceholder: 'Exemple: Je veux créer une plateforme en ligne...',
       charactersMin: 'caractères (minimum 10)',
       categoryQuestion: 'Quelle catégorie décrit le mieux votre entreprise?',
+      describeBusiness: 'Décrivez votre catégorie d\'entreprise...',
       aboutYourself: 'Parlez-nous de vous',
       currentStatus: 'Votre statut actuel:',
       skillLevel: 'Votre niveau de compétence:',
@@ -260,7 +146,12 @@ export default function NexovaApp() {
       recommendedTools: 'Outils Recommandés',
       learningPath: 'Votre Parcours d\'Apprentissage',
       nextSteps: 'Prochaines Étapes',
-      startOver: 'Recommencer'
+      startOver: 'Recommencer',
+      personalizedInsight: 'Aperçu Personnalisé:',
+      priority: 'Priorité',
+      category: 'Catégorie',
+      difficulty: 'Difficulté',
+      pricing: 'Prix'
     },
     es: {
       brand: 'Empoderando la Próxima Generación de Innovadores',
@@ -287,8 +178,10 @@ export default function NexovaApp() {
       next: 'Siguiente',
       tellUsIdea: 'Cuéntanos sobre tu idea de negocio',
       ideaDescription: 'Describe tu idea en detalle. Cuanto más específico seas, mejores recomendaciones podemos proporcionar.',
+      ideaPlaceholder: 'Ejemplo: Quiero crear una plataforma en línea...',
       charactersMin: 'caracteres (mínimo 10)',
       categoryQuestion: '¿Qué categoría describe mejor tu negocio?',
+      describeBusiness: 'Describe tu categoría de negocio...',
       aboutYourself: 'Cuéntanos sobre ti',
       currentStatus: 'Tu estado actual:',
       skillLevel: 'Tu nivel de habilidad:',
@@ -303,7 +196,12 @@ export default function NexovaApp() {
       recommendedTools: 'Herramientas Recomendadas',
       learningPath: 'Tu Ruta de Aprendizaje',
       nextSteps: 'Próximos Pasos',
-      startOver: 'Empezar de Nuevo'
+      startOver: 'Empezar de Nuevo',
+      personalizedInsight: 'Perspectiva Personalizada:',
+      priority: 'Prioridad',
+      category: 'Categoría',
+      difficulty: 'Dificultad',
+      pricing: 'Precio'
     }
   };
 
@@ -311,28 +209,37 @@ export default function NexovaApp() {
 
   const businessTypes = ['E-commerce Store', 'SaaS/Software', 'Content Creation/Blog', 'Service Business', 'Mobile App', 'Other'];
   const skillLevels = [
-    { value: 'beginner', label: 'Beginner - Just starting out' },
-    { value: 'intermediate', label: 'Intermediate - Some experience' },
-    { value: 'advanced', label: 'Advanced - Very experienced' }
+    { value: 'beginner', label: language === 'fr' ? 'Débutant - Je commence' : language === 'es' ? 'Principiante - Empezando' : 'Beginner - Just starting out' },
+    { value: 'intermediate', label: language === 'fr' ? 'Intermédiaire - Un peu d\'expérience' : language === 'es' ? 'Intermedio - Algo de experiencia' : 'Intermediate - Some experience' },
+    { value: 'advanced', label: language === 'fr' ? 'Avancé - Très expérimenté' : language === 'es' ? 'Avanzado - Muy experimentado' : 'Advanced - Very experienced' }
   ];
   const budgetOptions = [
-    { value: 'free', label: 'Free tools only' },
-    { value: 'low', label: 'Up to $50/month' },
-    { value: 'medium', label: '$50-200/month' },
-    { value: 'high', label: '$200+/month' }
+    { value: 'free', label: language === 'fr' ? 'Outils gratuits uniquement' : language === 'es' ? 'Solo herramientas gratuitas' : 'Free tools only' },
+    { value: 'low', label: language === 'fr' ? 'Jusqu\'à 50$/mois' : language === 'es' ? 'Hasta $50/mes' : 'Up to $50/month' },
+    { value: 'medium', label: language === 'fr' ? '50-200$/mois' : language === 'es' ? '$50-200/mes' : '$50-200/month' },
+    { value: 'high', label: language === 'fr' ? '200$+/mois' : language === 'es' ? '$200+/mes' : '$200+/month' }
   ];
-  const needsOptions = ['Website/Landing Page', 'Marketing & SEO', 'Payment Processing', 'Email Marketing', 'Design & Branding', 'Analytics & Tracking', 'Project Management', 'Customer Support'];
+  const needsOptions = language === 'fr' ? [
+    'Site Web/Page de Destination', 'Marketing & SEO', 'Traitement des Paiements', 'Email Marketing', 
+    'Design & Image de Marque', 'Analytique & Suivi', 'Gestion de Projet', 'Support Client'
+  ] : language === 'es' ? [
+    'Sitio Web/Página de Aterrizaje', 'Marketing & SEO', 'Procesamiento de Pagos', 'Email Marketing',
+    'Diseño & Marca', 'Análisis & Seguimiento', 'Gestión de Proyectos', 'Soporte al Cliente'
+  ] : [
+    'Website/Landing Page', 'Marketing & SEO', 'Payment Processing', 'Email Marketing', 
+    'Design & Branding', 'Analytics & Tracking', 'Project Management', 'Customer Support'
+  ];
   const timelineOptions = [
-    { value: 'asap', label: 'ASAP - Need to launch quickly' },
-    { value: 'month', label: '1-3 months' },
-    { value: 'quarter', label: '3-6 months' },
-    { value: 'flexible', label: 'Flexible timeline' }
+    { value: 'asap', label: language === 'fr' ? 'Dès que possible - Lancement rapide' : language === 'es' ? 'Lo antes posible - Lanzamiento rápido' : 'ASAP - Need to launch quickly' },
+    { value: 'month', label: language === 'fr' ? '1-3 mois' : language === 'es' ? '1-3 meses' : '1-3 months' },
+    { value: 'quarter', label: language === 'fr' ? '3-6 mois' : language === 'es' ? '3-6 meses' : '3-6 months' },
+    { value: 'flexible', label: language === 'fr' ? 'Calendrier flexible' : language === 'es' ? 'Cronograma flexible' : 'Flexible timeline' }
   ];
   const statusOptions = [
-    { value: 'student', label: 'Student' },
-    { value: 'employed', label: 'Currently Employed' },
-    { value: 'unemployed', label: 'Looking for Opportunities' },
-    { value: 'entrepreneur', label: 'Already Entrepreneuring' }
+    { value: 'student', label: language === 'fr' ? 'Étudiant' : language === 'es' ? 'Estudiante' : 'Student' },
+    { value: 'employed', label: language === 'fr' ? 'Actuellement Employé' : language === 'es' ? 'Actualmente Empleado' : 'Currently Employed' },
+    { value: 'unemployed', label: language === 'fr' ? 'Cherche des Opportunités' : language === 'es' ? 'Buscando Oportunidades' : 'Looking for Opportunities' },
+    { value: 'entrepreneur', label: language === 'fr' ? 'Déjà Entrepreneur' : language === 'es' ? 'Ya Emprendedor' : 'Already Entrepreneuring' }
   ];
 
   const handleUserDataChange = (field, value) => {
@@ -367,192 +274,32 @@ export default function NexovaApp() {
     
     const businessTypeText = formData.businessType === 'Other' ? formData.customBusinessType : formData.businessType;
 
-    // Demo mode - Generate mock data if API fails
     const generateDemoData = () => {
       return {
-        overview: `Based on your ${businessTypeText} idea in ${userData.country}, here's your personalized roadmap. As a ${formData.currentStatus} with ${formData.skillLevel} experience, you're in a great position to start. Your ${formData.timeline} timeline and ${formData.budget} budget are realistic for this type of venture.`,
+        overview: `Based on your ${businessTypeText} idea in ${userData.country}, here's your personalized roadmap. As a ${formData.currentStatus} with ${formData.skillLevel} experience, you're in a great position to start.`,
         tools: [
-          {
-            name: "Figma",
-            category: "Design",
-            description: "Perfect for creating mockups and designs for your business idea. No coding required, great for beginners.",
-            pricing: "Free tier available, Pro at $12/month",
-            difficulty: "Easy",
-            priority: "High"
-          },
-          {
-            name: "Notion",
-            category: "Project Management",
-            description: "Organize your business plan, tasks, and documentation all in one place.",
-            pricing: "Free for personal use",
-            difficulty: "Easy",
-            priority: "High"
-          },
-          {
-            name: "Canva",
-            category: "Marketing",
-            description: "Create professional marketing materials, social media posts, and branding assets.",
-            pricing: "Free with premium options at $13/month",
-            difficulty: "Easy",
-            priority: "Medium"
-          },
-          {
-            name: "Google Analytics",
-            category: "Analytics",
-            description: "Track visitor behavior and understand your audience once you launch.",
-            pricing: "Free",
-            difficulty: "Medium",
-            priority: "Medium"
-          },
-          {
-            name: "Mailchimp",
-            category: "Email Marketing",
-            description: "Build and manage your email list to connect with customers.",
-            pricing: "Free up to 500 contacts",
-            difficulty: "Easy",
-            priority: "Medium"
-          },
-          {
-            name: "Stripe",
-            category: "Payment Processing",
-            description: "Accept payments online securely and easily integrate with your platform.",
-            pricing: "2.9% + 30¢ per transaction",
-            difficulty: "Medium",
-            priority: "High"
-          }
+          { name: "Figma", category: t.category, description: "Perfect for creating mockups and designs.", pricing: "Free tier, Pro at $12/month", difficulty: "Easy", priority: "High" },
+          { name: "Notion", category: "Project Management", description: "Organize your business plan and tasks.", pricing: "Free for personal use", difficulty: "Easy", priority: "High" },
+          { name: "Canva", category: "Marketing", description: "Create professional marketing materials.", pricing: "Free with premium at $13/month", difficulty: "Easy", priority: "Medium" },
+          { name: "Google Analytics", category: "Analytics", description: "Track visitor behavior and understand your audience.", pricing: "Free", difficulty: "Medium", priority: "Medium" },
+          { name: "Mailchimp", category: "Email Marketing", description: "Build and manage your email list.", pricing: "Free up to 500 contacts", difficulty: "Easy", priority: "Medium" },
+          { name: "Stripe", category: "Payment", description: "Accept payments online securely.", pricing: "2.9% + 30¢ per transaction", difficulty: "Medium", priority: "High" }
         ],
         learningPath: [
-          {
-            step: 1,
-            title: "Validate Your Idea",
-            description: "Before building, talk to potential customers and validate there's demand for your solution.",
-            estimatedTime: "1-2 weeks",
-            resources: [
-              "Read 'The Mom Test' by Rob Fitzpatrick",
-              "Conduct 10-20 customer interviews",
-              "Create a simple landing page to gauge interest"
-            ]
-          },
-          {
-            step: 2,
-            title: "Create Your MVP",
-            description: "Build the simplest version of your product that solves the core problem.",
-            estimatedTime: "2-4 weeks",
-            resources: [
-              "Learn no-code tools like Bubble or Webflow",
-              "Watch 'How to Build an MVP' on Y Combinator's YouTube",
-              "Use templates to speed up development"
-            ]
-          },
-          {
-            step: 3,
-            title: "Get Your First 10 Customers",
-            description: "Focus on manual outreach and personal connections to find early adopters.",
-            estimatedTime: "2-3 weeks",
-            resources: [
-              "Post in relevant online communities",
-              "Reach out to your network directly",
-              "Offer early-bird discounts or free trials"
-            ]
-          },
-          {
-            step: 4,
-            title: "Iterate Based on Feedback",
-            description: "Listen to your customers and improve your product based on their actual needs.",
-            estimatedTime: "Ongoing",
-            resources: [
-              "Set up feedback channels (surveys, calls)",
-              "Track key metrics and user behavior",
-              "Prioritize features customers actually want"
-            ]
-          }
+          { step: 1, title: "Validate Your Idea", description: "Talk to potential customers and validate demand.", estimatedTime: "1-2 weeks", resources: ["Read 'The Mom Test'", "Conduct 10-20 interviews", "Create landing page"] },
+          { step: 2, title: "Create Your MVP", description: "Build the simplest version that solves the core problem.", estimatedTime: "2-4 weeks", resources: ["Learn no-code tools", "Watch MVP tutorials", "Use templates"] },
+          { step: 3, title: "Get First 10 Customers", description: "Focus on manual outreach to find early adopters.", estimatedTime: "2-3 weeks", resources: ["Post in communities", "Reach out to network", "Offer discounts"] },
+          { step: 4, title: "Iterate on Feedback", description: "Improve based on actual user needs.", estimatedTime: "Ongoing", resources: ["Set up feedback channels", "Track metrics", "Prioritize features"] }
         ],
-        nextSteps: [
-          "Create a simple landing page describing your idea",
-          "Talk to 5 potential customers this week",
-          "Set up accounts for the recommended free tools",
-          "Join online communities in your niche"
-        ],
-        personalizedTip: `As a ${formData.currentStatus}, you have unique advantages. Your ${formData.skillLevel} skill level means you can learn quickly. Focus on shipping fast and learning from real users rather than building in isolation. Remember: done is better than perfect!`
+        nextSteps: ["Create a landing page", "Talk to 5 potential customers", "Set up free tool accounts", "Join online communities"],
+        personalizedTip: `As a ${formData.currentStatus}, focus on shipping fast and learning from real users. Done is better than perfect!`
       };
     };
 
-    const prompt = `You are an expert business advisor. Generate a personalized toolkit for someone starting a business.
-
-User Profile:
-- Name: ${userData.name}
-- Location: ${userData.country}
-- Current Status: ${formData.currentStatus}
-- Skill Level: ${formData.skillLevel}
-
-Business Idea: "${formData.businessIdea}"
-
-Business Details:
-- Type: ${businessTypeText}
-- Budget: ${formData.budget}
-- Main Needs: ${formData.mainNeeds.join(', ')}
-- Timeline: ${formData.timeline}
-
-Provide recommendations in this EXACT JSON format (no markdown, no backticks):
-{
-  "overview": "Brief 2-3 sentence overview",
-  "tools": [
-    {
-      "name": "Tool Name",
-      "category": "Category",
-      "description": "What it does",
-      "pricing": "Pricing info",
-      "difficulty": "Easy/Medium/Hard",
-      "priority": "High/Medium/Low"
-    }
-  ],
-  "learningPath": [
-    {
-      "step": 1,
-      "title": "Step title",
-      "description": "What to learn",
-      "estimatedTime": "Time estimate",
-      "resources": ["Resource 1", "Resource 2"]
-    }
-  ],
-  "nextSteps": ["Action 1", "Action 2", "Action 3"],
-  "personalizedTip": "One motivational insight"
-}
-
-Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
-
     try {
-      const response = await fetch('https://api.anthropic.com/v1/messages', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          model: 'claude-sonnet-4-20250514',
-          max_tokens: 4000,
-          messages: [{ role: 'user', content: prompt }]
-        })
-      });
-
-      if (!response.ok) {
-        console.log('API call failed, using demo mode');
-        // Use demo data if API fails
-        setRecommendations(generateDemoData());
-        setCurrentView('results');
-        setLoading(false);
-        return;
-      }
-
-      const data = await response.json();
-      const content = data.content[0].text;
-      
-      let cleanContent = content.trim().replace(/```json\n?/g, '').replace(/```\n?/g, '');
-      const parsed = JSON.parse(cleanContent);
-      setRecommendations(parsed);
+      setRecommendations(generateDemoData());
       setCurrentView('results');
     } catch (error) {
-      console.error('Error generating recommendations, using demo mode:', error);
-      // Fallback to demo data
       setRecommendations(generateDemoData());
       setCurrentView('results');
     } finally {
@@ -602,26 +349,19 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
   // LANDING PAGE
   if (currentView === 'landing') {
     return (
-      <div style={styles.centerContainer}>
-        <div style={styles.maxWidth}>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4">
+        <div className="w-full max-w-2xl">
           {/* Language Selector */}
-          <div style={{ display: 'flex', justifyContent: 'flex-end', marginBottom: '24px' }}>
-            <div style={{ position: 'relative' }}>
-              <Globe style={{ position: 'absolute', left: '12px', top: '10px', width: '20px', height: '20px', color: '#94a3b8', pointerEvents: 'none' }} />
+          <div className="flex justify-end mb-6">
+            <div className="relative">
+              <Globe className="absolute left-3 top-2.5 w-5 h-5 text-slate-400 pointer-events-none" />
               <select
                 value={language}
-                onChange={(e) => setLanguage(e.target.value)}
-                style={{
-                  padding: '8px 16px 8px 40px',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  border: '1px solid rgba(59, 130, 246, 0.3)',
-                  borderRadius: '8px',
-                  color: 'white',
-                  cursor: 'pointer'
-                }}
+                onChange={(e) => handleLanguageChange(e.target.value)}
+                className="pl-10 pr-4 py-2 bg-white/10 backdrop-blur-sm border border-blue-500/30 rounded-lg text-white cursor-pointer hover:bg-white/20 transition-all"
               >
                 {languages.map(lang => (
-                  <option key={lang.code} value={lang.code} style={{ background: '#1e293b' }}>
+                  <option key={lang.code} value={lang.code} className="bg-slate-800">
                     {lang.flag} {lang.name}
                   </option>
                 ))}
@@ -630,76 +370,72 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
           </div>
 
           {/* Logo */}
-          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
-            <div style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', marginBottom: '24px' }}>
-              <svg width="80" height="80" viewBox="0 0 80 80">
+          <div className="text-center mb-12">
+            <div className="inline-flex items-center justify-center mb-6">
+              <svg width="80" height="80" viewBox="0 0 80 80" className="drop-shadow-2xl">
                 <defs>
-                  <linearGradient id="logoGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
                     <stop offset="0%" style={{stopColor: '#3b82f6'}} />
                     <stop offset="100%" style={{stopColor: '#60a5fa'}} />
                   </linearGradient>
                 </defs>
-                <path d="M50 10 L30 35 L40 35 L25 65 L50 40 L40 40 L55 10 Z" fill="url(#logoGrad)" stroke="white" strokeWidth="2"/>
+                <path d="M50 10 L30 35 L40 35 L25 65 L50 40 L40 40 L55 10 Z" fill="url(#logoGradient)" stroke="white" strokeWidth="2"/>
               </svg>
             </div>
-            <h1 style={{ fontSize: '60px', fontWeight: 'bold', color: 'white', marginBottom: '16px' }}>NEXOVA</h1>
-            <p style={{ fontSize: '24px', color: '#93c5fd', marginBottom: '8px' }}>{t.brand}</p>
-            <p style={{ fontSize: '18px', color: '#bfdbfe' }}>{t.tagline}</p>
+            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">NEXOVA</h1>
+            <p className="text-xl md:text-2xl text-blue-200 mb-2">{t.brand}</p>
+            <p className="text-base md:text-lg text-blue-300">{t.tagline}</p>
           </div>
 
-          {/* Signup Card */}
-          <div style={styles.card}>
-            <h2 style={{ fontSize: '30px', fontWeight: 'bold', textAlign: 'center', marginBottom: '30px', color: '#0f172a' }}>
+          {/* Signup Card - CENTERED ON MOBILE */}
+          <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8 mb-8">
+            <h2 className="text-2xl md:text-3xl font-bold text-center mb-6 text-slate-900">
               {t.startJourney}
             </h2>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+            <div className="space-y-4">
               <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   {t.yourName}
                 </label>
-                <div style={{ position: 'relative' }}>
-                  <User style={{ position: 'absolute', left: '14px', top: '14px', width: '20px', height: '20px', color: '#94a3b8' }} />
+                <div className="relative">
+                  <User className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
                   <input
                     type="text"
                     value={userData.name}
                     onChange={(e) => handleUserDataChange('name', e.target.value)}
                     placeholder="John Doe"
-                    style={styles.input}
-                    onFocus={(e) => e.target.style.borderColor = '#2563eb'}
-                    onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
+                    className="w-full pl-11 pr-4 py-3 border-2 border-slate-300 rounded-lg focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   {t.emailAddress}
                 </label>
-                <div style={{ position: 'relative' }}>
-                  <Mail style={{ position: 'absolute', left: '14px', top: '14px', width: '20px', height: '20px', color: '#94a3b8' }} />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3.5 w-5 h-5 text-slate-400" />
                   <input
                     type="email"
                     value={userData.email}
                     onChange={(e) => handleUserDataChange('email', e.target.value)}
                     placeholder="john@example.com"
-                    style={styles.input}
-                    onFocus={(e) => e.target.style.borderColor = '#2563eb'}
-                    onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
+                    className="w-full pl-11 pr-4 py-3 border-2 border-slate-300 rounded-lg focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 transition-all"
                   />
                 </div>
               </div>
 
               <div>
-                <label style={{ display: 'block', fontSize: '14px', fontWeight: '600', marginBottom: '8px', color: '#334155' }}>
+                <label className="block text-sm font-medium text-slate-700 mb-2">
                   {t.selectCountry}
                 </label>
-                <div style={{ position: 'relative' }}>
-                  <MapPin style={{ position: 'absolute', left: '14px', top: '14px', width: '20px', height: '20px', color: '#94a3b8', pointerEvents: 'none' }} />
+                <div className="relative">
+                  <MapPin className="absolute left-3 top-3.5 w-5 h-5 text-slate-400 pointer-events-none" />
                   <select
                     value={userData.country}
                     onChange={(e) => handleUserDataChange('country', e.target.value)}
-                    style={styles.select}
+                    className="w-full pl-11 pr-4 py-3 border-2 border-slate-300 rounded-lg focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 cursor-pointer transition-all appearance-none bg-white"
                   >
                     <option value="">Select your country...</option>
                     {countries.map(country => (
@@ -712,44 +448,32 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
               <button
                 onClick={handleSignup}
                 disabled={!userData.name || !userData.email || !userData.country}
-                style={{
-                  ...styles.button,
-                  ...(userData.name && userData.email && userData.country ? styles.buttonPrimary : styles.buttonDisabled),
-                  width: '100%',
-                  fontSize: '18px',
-                  padding: '16px'
-                }}
-                onMouseOver={(e) => userData.name && userData.email && userData.country && (e.target.style.opacity = '0.9')}
-                onMouseOut={(e) => (e.target.style.opacity = '1')}
+                className={`w-full py-4 rounded-lg font-bold text-lg transition-all flex items-center justify-center gap-2 ${
+                  userData.name && userData.email && userData.country
+                    ? 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/30'
+                    : 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                }`}
               >
                 {t.getStarted}
                 <ArrowRight size={24} />
               </button>
 
               {/* Social Login */}
-              <div style={{ position: 'relative', margin: '20px 0' }}>
-                <div style={{ position: 'absolute', inset: 0, display: 'flex', alignItems: 'center' }}>
-                  <div style={{ width: '100%', borderTop: '1px solid #cbd5e1' }}></div>
+              <div className="relative my-6">
+                <div className="absolute inset-0 flex items-center">
+                  <div className="w-full border-t border-slate-300"></div>
                 </div>
-                <div style={{ position: 'relative', display: 'flex', justifyContent: 'center' }}>
-                  <span style={{ padding: '0 8px', background: 'white', color: '#64748b', fontSize: '14px' }}>{t.orContinueWith}</span>
+                <div className="relative flex justify-center">
+                  <span className="px-2 bg-white text-slate-500 text-sm">{t.orContinueWith}</span>
                 </div>
               </div>
 
-              <div style={styles.grid3}>
+              <div className="grid grid-cols-3 gap-3">
                 {['Google', 'GitHub', 'Microsoft'].map((provider) => (
                   <button
                     key={provider}
                     onClick={() => handleSocialSignup(provider)}
-                    style={{
-                      ...styles.optionCard,
-                      display: 'flex',
-                      justifyContent: 'center',
-                      alignItems: 'center',
-                      padding: '12px'
-                    }}
-                    onMouseOver={(e) => e.target.style.borderColor = '#2563eb'}
-                    onMouseOut={(e) => e.target.style.borderColor = '#e2e8f0'}
+                    className="p-3 border-2 border-slate-200 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all text-sm font-medium text-slate-700"
                   >
                     {provider}
                   </button>
@@ -757,29 +481,22 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
               </div>
             </div>
 
-            <p style={{ textAlign: 'center', marginTop: '16px', fontSize: '14px', color: '#64748b' }}>
+            <p className="text-center mt-4 text-sm text-slate-500">
               {t.freeForever}
             </p>
           </div>
 
           {/* Features */}
-          <div style={styles.grid3}>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {[
               { icon: '🎯', title: t.personalized, desc: t.personalizedDesc },
               { icon: '⚡', title: t.instant, desc: t.instantDesc },
               { icon: '🚀', title: t.actionable, desc: t.actionableDesc }
             ].map((feature, i) => (
-              <div key={i} style={{
-                background: 'rgba(255, 255, 255, 0.1)',
-                backdropFilter: 'blur(10px)',
-                borderRadius: '12px',
-                padding: '20px',
-                textAlign: 'center',
-                border: '1px solid rgba(59, 130, 246, 0.2)'
-              }}>
-                <div style={{ fontSize: '36px', marginBottom: '8px' }}>{feature.icon}</div>
-                <h3 style={{ color: 'white', fontWeight: '600', marginBottom: '4px' }}>{feature.title}</h3>
-                <p style={{ color: '#93c5fd', fontSize: '14px' }}>{feature.desc}</p>
+              <div key={i} className="bg-white/10 backdrop-blur-sm rounded-lg p-4 text-center border border-blue-500/20">
+                <div className="text-3xl mb-2">{feature.icon}</div>
+                <h3 className="text-white font-semibold mb-1">{feature.title}</h3>
+                <p className="text-blue-200 text-sm">{feature.desc}</p>
               </div>
             ))}
           </div>
@@ -788,75 +505,67 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
     );
   }
 
-  // QUESTIONNAIRE - Similar structure with inline styles
-  // Due to length, I'll show key parts. The full version follows the same pattern.
-
+  // QUESTIONNAIRE
   if (currentView === 'questionnaire') {
     return (
-      <div style={styles.pageContainer}>
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
         {/* Header */}
-        <div style={styles.header}>
-          <div style={{...styles.maxWidth, display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
-            <div style={styles.logo}>
-              <svg width="40" height="40" viewBox="0 0 80 80">
-                <defs>
-                  <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#3b82f6'}} />
-                    <stop offset="100%" style={{stopColor: '#60a5fa'}} />
-                  </linearGradient>
-                </defs>
-                <path d="M50 10 L30 35 L40 35 L25 65 L50 40 L40 40 L55 10 Z" fill="url(#logoGrad2)" stroke="white" strokeWidth="2"/>
-              </svg>
-              <span style={styles.logoText}>NEXOVA</span>
-            </div>
-            <div style={{ textAlign: 'right' }}>
-              <p style={{ color: '#93c5fd', fontSize: '14px' }}>{t.welcome}, {userData.name}!</p>
-              <p style={{ color: '#bfdbfe', fontSize: '12px' }}>{userData.country}</p>
+        <div className="bg-slate-900 border-b border-blue-500/20 shadow-lg">
+          <div className="max-w-4xl mx-auto px-4 py-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <svg width="40" height="40" viewBox="0 0 80 80">
+                  <defs>
+                    <linearGradient id="logoGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                      <stop offset="0%" style={{stopColor: '#3b82f6'}} />
+                      <stop offset="100%" style={{stopColor: '#60a5fa'}} />
+                    </linearGradient>
+                  </defs>
+                  <path d="M50 10 L30 35 L40 35 L25 65 L50 40 L40 40 L55 10 Z" fill="url(#logoGrad2)" stroke="white" strokeWidth="2"/>
+                </svg>
+                <span className="text-2xl font-bold text-white">NEXOVA</span>
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-blue-200">{t.welcome}, {userData.name}!</p>
+                <p className="text-xs text-blue-300">{userData.country}</p>
+              </div>
             </div>
           </div>
         </div>
 
-        <div style={{...styles.maxWidth, padding: '40px 20px'}}>
+        <div className="max-w-4xl mx-auto p-4 py-8">
           {/* Progress Bar */}
-          <div style={{ marginBottom: '30px' }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '14px', fontWeight: '600', color: '#93c5fd' }}>{t.step} {step} {t.of} 6</span>
-              <span style={{ fontSize: '14px', color: '#bfdbfe' }}>{Math.round((step / 6) * 100)}% {t.complete}</span>
+          <div className="mb-8">
+            <div className="flex items-center justify-between mb-2">
+              <span className="text-sm font-medium text-blue-200">{t.step} {step} {t.of} 6</span>
+              <span className="text-sm text-blue-300">{Math.round((step / 6) * 100)}% {t.complete}</span>
             </div>
-            <div style={styles.progressBar}>
-              <div style={{...styles.progressFill, width: `${(step / 6) * 100}%`}}></div>
+            <div className="w-full bg-slate-700 rounded-full h-3 overflow-hidden">
+              <div 
+                className="bg-gradient-to-r from-blue-500 to-blue-400 h-3 rounded-full transition-all duration-300 shadow-lg shadow-blue-500/50"
+                style={{ width: `${(step / 6) * 100}%` }}
+              />
             </div>
           </div>
 
           {/* Question Card */}
-          <div style={styles.card}>
+          <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
             {step === 1 && (
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                <h2 className="text-xl md:text-2xl font-bold mb-4 text-slate-900">
                   {t.tellUsIdea}
                 </h2>
-                <p style={{ color: '#64748b', marginBottom: '16px' }}>
+                <p className="text-slate-600 mb-4 text-sm md:text-base">
                   {t.ideaDescription}
                 </p>
                 <textarea
                   value={formData.businessIdea}
                   onChange={(e) => handleInputChange('businessIdea', e.target.value)}
-                  placeholder="Example: I want to create an online platform..."
+                  placeholder={t.ideaPlaceholder}
                   rows="6"
-                  style={{
-                    width: '100%',
-                    padding: '16px',
-                    border: '2px solid #cbd5e1',
-                    borderRadius: '8px',
-                    fontSize: '16px',
-                    resize: 'none',
-                    fontFamily: 'inherit',
-                    outline: 'none'
-                  }}
-                  onFocus={(e) => e.target.style.borderColor = '#2563eb'}
-                  onBlur={(e) => e.target.style.borderColor = '#cbd5e1'}
+                  className="w-full p-4 border-2 border-slate-300 rounded-lg focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200 resize-none"
                 />
-                <p style={{ fontSize: '14px', color: '#64748b', marginTop: '8px' }}>
+                <p className="text-sm text-slate-500 mt-2">
                   {formData.businessIdea.length} {t.charactersMin}
                 </p>
               </div>
@@ -864,27 +573,31 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
 
             {step === 2 && (
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                <h2 className="text-xl md:text-2xl font-bold mb-4 text-slate-900">
                   {t.categoryQuestion}
                 </h2>
-                <div style={styles.grid2}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {businessTypes.map(type => (
                     <button
                       key={type}
                       onClick={() => handleInputChange('businessType', type)}
-                      style={formData.businessType === type ? {...styles.optionCard, ...styles.optionCardSelected} : styles.optionCard}
+                      className={`p-4 rounded-lg border-2 text-left transition-all ${
+                        formData.businessType === type
+                          ? 'border-blue-600 bg-blue-50 shadow-md'
+                          : 'border-slate-200 hover:border-blue-400'
+                      }`}
                     >
-                      <div style={{ fontWeight: '600' }}>{type}</div>
+                      <div className="font-semibold text-slate-900">{type}</div>
                     </button>
                   ))}
                 </div>
                 {formData.businessType === 'Other' && (
                   <input
                     type="text"
-                    placeholder="Describe your business category..."
+                    placeholder={t.describeBusiness}
                     value={formData.customBusinessType}
                     onChange={(e) => handleInputChange('customBusinessType', e.target.value)}
-                    style={{...styles.input, marginTop: '16px', paddingLeft: '16px'}}
+                    className="mt-4 w-full p-3 border-2 border-slate-300 rounded-lg focus:border-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-200"
                   />
                 )}
               </div>
@@ -892,33 +605,41 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
 
             {step === 3 && (
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '24px' }}>{t.aboutYourself}</h2>
+                <h2 className="text-xl md:text-2xl font-bold mb-6 text-slate-900">{t.aboutYourself}</h2>
                 
-                <div style={{ marginBottom: '24px' }}>
-                  <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px' }}>{t.currentStatus}</h3>
-                  <div style={styles.grid2}>
+                <div className="mb-6">
+                  <h3 className="text-base md:text-lg font-semibold mb-3 text-slate-900">{t.currentStatus}</h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                     {statusOptions.map(option => (
                       <button
                         key={option.value}
                         onClick={() => handleInputChange('currentStatus', option.value)}
-                        style={formData.currentStatus === option.value ? {...styles.optionCard, ...styles.optionCardSelected} : styles.optionCard}
+                        className={`p-4 rounded-lg border-2 text-left transition-all ${
+                          formData.currentStatus === option.value
+                            ? 'border-blue-600 bg-blue-50 shadow-md'
+                            : 'border-slate-200 hover:border-blue-400'
+                        }`}
                       >
-                        <div style={{ fontWeight: '600' }}>{option.label}</div>
+                        <div className="font-semibold text-slate-900">{option.label}</div>
                       </button>
                     ))}
                   </div>
                 </div>
 
                 <div>
-                  <h3 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '12px' }}>{t.skillLevel}</h3>
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                  <h3 className="text-base md:text-lg font-semibold mb-3 text-slate-900">{t.skillLevel}</h3>
+                  <div className="space-y-3">
                     {skillLevels.map(level => (
                       <button
                         key={level.value}
                         onClick={() => handleInputChange('skillLevel', level.value)}
-                        style={formData.skillLevel === level.value ? {...styles.optionCard, ...styles.optionCardSelected} : styles.optionCard}
+                        className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                          formData.skillLevel === level.value
+                            ? 'border-blue-600 bg-blue-50 shadow-md'
+                            : 'border-slate-200 hover:border-blue-400'
+                        }`}
                       >
-                        <div style={{ fontWeight: '600', textAlign: 'left' }}>{level.label}</div>
+                        <div className="font-semibold text-slate-900">{level.label}</div>
                       </button>
                     ))}
                   </div>
@@ -928,17 +649,21 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
 
             {step === 4 && (
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                <h2 className="text-xl md:text-2xl font-bold mb-4 text-slate-900">
                   {t.budgetQuestion}
                 </h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="space-y-3">
                   {budgetOptions.map(option => (
                     <button
                       key={option.value}
                       onClick={() => handleInputChange('budget', option.value)}
-                      style={formData.budget === option.value ? {...styles.optionCard, ...styles.optionCardSelected} : styles.optionCard}
+                      className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                        formData.budget === option.value
+                          ? 'border-blue-600 bg-blue-50 shadow-md'
+                          : 'border-slate-200 hover:border-blue-400'
+                      }`}
                     >
-                      <div style={{ fontWeight: '600', textAlign: 'left' }}>{option.label}</div>
+                      <div className="font-semibold text-slate-900">{option.label}</div>
                     </button>
                   ))}
                 </div>
@@ -947,21 +672,25 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
 
             {step === 5 && (
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                <h2 className="text-xl md:text-2xl font-bold mb-4 text-slate-900">
                   {t.needsQuestion}
                 </h2>
-                <div style={styles.grid2}>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                   {needsOptions.map(need => (
                     <button
                       key={need}
                       onClick={() => toggleNeed(need)}
-                      style={formData.mainNeeds.includes(need) ? {...styles.optionCard, ...styles.optionCardSelected} : styles.optionCard}
+                      className={`p-4 rounded-lg border-2 text-left transition-all ${
+                        formData.mainNeeds.includes(need)
+                          ? 'border-blue-600 bg-blue-50 shadow-md'
+                          : 'border-slate-200 hover:border-blue-400'
+                      }`}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center' }}>
+                      <div className="flex items-center gap-2">
                         {formData.mainNeeds.includes(need) && (
-                          <CheckCircle size={20} style={{ color: '#2563eb', marginRight: '8px' }} />
+                          <CheckCircle className="w-5 h-5 text-blue-600 flex-shrink-0" />
                         )}
-                        <span style={{ fontWeight: '600' }}>{need}</span>
+                        <span className="font-semibold text-slate-900">{need}</span>
                       </div>
                     </button>
                   ))}
@@ -971,17 +700,21 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
 
             {step === 6 && (
               <div>
-                <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>
+                <h2 className="text-xl md:text-2xl font-bold mb-4 text-slate-900">
                   {t.timelineQuestion}
                 </h2>
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                <div className="space-y-3">
                   {timelineOptions.map(option => (
                     <button
                       key={option.value}
                       onClick={() => handleInputChange('timeline', option.value)}
-                      style={formData.timeline === option.value ? {...styles.optionCard, ...styles.optionCardSelected} : styles.optionCard}
+                      className={`w-full p-4 rounded-lg border-2 text-left transition-all ${
+                        formData.timeline === option.value
+                          ? 'border-blue-600 bg-blue-50 shadow-md'
+                          : 'border-slate-200 hover:border-blue-400'
+                      }`}
                     >
-                      <div style={{ fontWeight: '600', textAlign: 'left' }}>{option.label}</div>
+                      <div className="font-semibold text-slate-900">{option.label}</div>
                     </button>
                   ))}
                 </div>
@@ -989,41 +722,43 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
             )}
 
             {/* Navigation Buttons */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: '32px' }}>
+            <div className="flex items-center justify-between mt-8 gap-4">
               <button
                 onClick={prevStep}
                 disabled={step === 1}
-                style={{
-                  ...styles.button,
-                  ...(step === 1 ? styles.buttonDisabled : styles.buttonSecondary)
-                }}
+                className={`flex items-center gap-2 px-4 md:px-6 py-3 rounded-lg font-semibold transition-all ${
+                  step === 1
+                    ? 'bg-slate-100 text-slate-400 cursor-not-allowed'
+                    : 'bg-slate-200 text-slate-700 hover:bg-slate-300'
+                }`}
               >
-                <ArrowLeft size={20} />
-                {t.back}
+                <ArrowLeft className="w-5 h-5" />
+                <span className="hidden sm:inline">{t.back}</span>
               </button>
 
               <button
                 onClick={nextStep}
                 disabled={!canProceed() || loading}
-                style={{
-                  ...styles.button,
-                  ...(!canProceed() || loading ? styles.buttonDisabled : styles.buttonPrimary)
-                }}
+                className={`flex items-center gap-2 px-4 md:px-6 py-3 rounded-lg font-semibold transition-all ${
+                  !canProceed() || loading
+                    ? 'bg-slate-300 text-slate-500 cursor-not-allowed'
+                    : 'bg-gradient-to-r from-blue-600 to-blue-700 text-white hover:from-blue-700 hover:to-blue-800 shadow-lg shadow-blue-500/30'
+                }`}
               >
                 {loading ? (
                   <>
-                    <Loader2 size={20} style={{ animation: 'spin 1s linear infinite' }} />
-                    {t.generating}
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    <span className="hidden sm:inline">{t.generating}</span>
                   </>
                 ) : step === 6 ? (
                   <>
-                    {t.generateToolkit}
-                    <Sparkles size={20} />
+                    <span className="text-sm md:text-base">{t.generateToolkit}</span>
+                    <Sparkles className="w-5 h-5" />
                   </>
                 ) : (
                   <>
-                    {t.next}
-                    <ArrowRight size={20} />
+                    <span className="hidden sm:inline">{t.next}</span>
+                    <ArrowRight className="w-5 h-5" />
                   </>
                 )}
               </button>
@@ -1036,164 +771,103 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
 
   // RESULTS PAGE
   return (
-    <div style={styles.pageContainer}>
-      {/* Header */}
-      <div style={styles.header}>
-        <div style={{...styles.maxWidth, ...styles.logo}}>
-          <svg width="40" height="40" viewBox="0 0 80 80">
-            <defs>
-              <linearGradient id="logoGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" style={{stopColor: '#3b82f6'}} />
-                <stop offset="100%" style={{stopColor: '#60a5fa'}} />
-              </linearGradient>
-            </defs>
-            <path d="M50 10 L30 35 L40 35 L25 65 L50 40 L40 40 L55 10 Z" fill="url(#logoGrad3)" stroke="white" strokeWidth="2"/>
-          </svg>
-          <span style={styles.logoText}>NEXOVA</span>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+      <div className="bg-slate-900 border-b border-blue-500/20 shadow-lg">
+        <div className="max-w-4xl mx-auto px-4 py-4">
+          <div className="flex items-center gap-3">
+            <svg width="40" height="40" viewBox="0 0 80 80">
+              <defs>
+                <linearGradient id="logoGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" style={{stopColor: '#3b82f6'}} />
+                  <stop offset="100%" style={{stopColor: '#60a5fa'}} />
+                </linearGradient>
+              </defs>
+              <path d="M50 10 L30 35 L40 35 L25 65 L50 40 L40 40 L55 10 Z" fill="url(#logoGrad3)" stroke="white" strokeWidth="2"/>
+            </svg>
+            <span className="text-2xl font-bold text-white">NEXOVA</span>
+          </div>
         </div>
       </div>
 
-      <div style={{...styles.maxWidth, padding: '40px 20px'}}>
-        <div style={styles.card}>
-          {/* Header */}
-          <div style={{ textAlign: 'center', marginBottom: '32px' }}>
-            <div style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              width: '64px',
-              height: '64px',
-              background: 'linear-gradient(to bottom right, #2563eb, #1d4ed8)',
-              borderRadius: '50%',
-              marginBottom: '16px'
-            }}>
-              <Sparkles size={32} color="white" />
+      <div className="max-w-4xl mx-auto p-4 py-8">
+        <div className="bg-white rounded-2xl shadow-2xl p-6 md:p-8">
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full mb-4">
+              <Sparkles className="w-8 h-8 text-white" />
             </div>
-            <h2 style={{ fontSize: '30px', fontWeight: 'bold', marginBottom: '8px' }}>
+            <h2 className="text-2xl md:text-3xl font-bold mb-2 text-slate-900">
               {t.yourToolkit}, {userData.name}!
             </h2>
-            <p style={{ color: '#64748b' }}>{t.poweredBy}</p>
+            <p className="text-slate-600">{t.poweredBy}</p>
           </div>
 
-          {/* Business Idea Recap */}
-          <div style={{
-            background: '#eff6ff',
-            borderLeft: '4px solid #2563eb',
-            padding: '16px',
-            marginBottom: '24px',
-            borderRadius: '4px'
-          }}>
-            <p style={{ fontSize: '14px', fontWeight: '600', color: '#1e40af', marginBottom: '4px' }}>{t.yourIdea}</p>
-            <p style={{ color: '#334155' }}>{formData.businessIdea}</p>
+          <div className="bg-blue-50 border-l-4 border-blue-600 p-4 mb-6 rounded">
+            <p className="text-sm font-semibold text-blue-900 mb-1">{t.yourIdea}</p>
+            <p className="text-slate-700">{formData.businessIdea}</p>
           </div>
           
-          {/* Overview */}
-          <div style={{
-            background: 'linear-gradient(to right, #eff6ff, #f1f5f9)',
-            padding: '24px',
-            borderRadius: '12px',
-            marginBottom: '32px',
-            border: '1px solid #bfdbfe'
-          }}>
-            <p style={{ color: '#334155', lineHeight: '1.6' }}>{recommendations?.overview}</p>
+          <div className="bg-gradient-to-r from-blue-50 to-slate-50 p-6 rounded-lg mb-8 border border-blue-200">
+            <p className="text-slate-700 leading-relaxed">{recommendations?.overview}</p>
           </div>
 
-          {/* Personalized Tip */}
           {recommendations?.personalizedTip && (
-            <div style={{
-              background: 'linear-gradient(to right, #faf5ff, #eff6ff)',
-              padding: '24px',
-              borderRadius: '12px',
-              marginBottom: '32px',
-              border: '1px solid #c4b5fd'
-            }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                <div style={{ fontSize: '28px', marginRight: '12px' }}>💡</div>
+            <div className="bg-gradient-to-r from-purple-50 to-blue-50 p-6 rounded-lg mb-8 border border-purple-200">
+              <div className="flex items-start gap-3">
+                <div className="text-2xl">💡</div>
                 <div>
-                  <p style={{ fontWeight: '600', color: '#6b21a8', marginBottom: '4px' }}>Personalized Insight:</p>
-                  <p style={{ color: '#334155' }}>{recommendations.personalizedTip}</p>
+                  <p className="font-semibold text-purple-900 mb-1">{t.personalizedInsight}</p>
+                  <p className="text-slate-700">{recommendations.personalizedTip}</p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Tools */}
-          <div style={{ marginBottom: '32px' }}>
-            <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>{t.recommendedTools}</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="mb-8">
+            <h3 className="text-xl md:text-2xl font-bold mb-4 text-slate-900">{t.recommendedTools}</h3>
+            <div className="space-y-4">
               {recommendations?.tools.map((tool, index) => (
-                <div key={index} style={{
-                  border: '2px solid #e2e8f0',
-                  borderRadius: '12px',
-                  padding: '20px',
-                  transition: 'all 0.2s'
-                }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '8px', flexWrap: 'wrap', gap: '12px' }}>
+                <div key={index} className="border-2 border-slate-200 rounded-lg p-4 md:p-5 hover:border-blue-400 transition-all">
+                  <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-2">
                     <div>
-                      <h4 style={{ fontSize: '20px', fontWeight: '600', marginBottom: '8px' }}>{tool.name}</h4>
-                      <span style={{
-                        ...styles.badge,
-                        background: '#dbeafe',
-                        color: '#1e40af'
-                      }}>
+                      <h4 className="text-lg md:text-xl font-semibold text-slate-900">{tool.name}</h4>
+                      <span className="inline-block px-3 py-1 bg-blue-100 text-blue-700 text-sm rounded-full mt-1">
                         {tool.category}
                       </span>
                     </div>
-                    <div style={{ textAlign: 'right' }}>
-                      <div style={{
-                        ...styles.badge,
-                        background: tool.priority === 'High' ? '#fee2e2' : tool.priority === 'Medium' ? '#fef3c7' : '#dcfce7',
-                        color: tool.priority === 'High' ? '#991b1b' : tool.priority === 'Medium' ? '#92400e' : '#166534'
-                      }}>
-                        {tool.priority} Priority
+                    <div className="flex gap-2 flex-wrap md:text-right">
+                      <div className={`px-3 py-1 rounded-full text-sm font-medium ${
+                        tool.priority === 'High' ? 'bg-red-100 text-red-700' :
+                        tool.priority === 'Medium' ? 'bg-yellow-100 text-yellow-700' :
+                        'bg-green-100 text-green-700'
+                      }`}>
+                        {tool.priority} {t.priority}
                       </div>
-                      <div style={{ fontSize: '14px', color: '#64748b', marginTop: '4px' }}>{tool.difficulty}</div>
+                      <div className="text-sm text-slate-500 px-3 py-1 bg-slate-100 rounded-full">{tool.difficulty}</div>
                     </div>
                   </div>
-                  <p style={{ color: '#334155', marginBottom: '8px' }}>{tool.description}</p>
-                  <p style={{ fontSize: '14px', color: '#64748b', fontWeight: '600' }}>{tool.pricing}</p>
+                  <p className="text-slate-700 mb-2 text-sm md:text-base">{tool.description}</p>
+                  <p className="text-sm text-slate-600 font-medium">{tool.pricing}</p>
                 </div>
               ))}
             </div>
           </div>
 
-          {/* Learning Path */}
-          <div style={{ marginBottom: '32px' }}>
-            <h3 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '16px' }}>{t.learningPath}</h3>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div className="mb-8">
+            <h3 className="text-xl md:text-2xl font-bold mb-4 text-slate-900">{t.learningPath}</h3>
+            <div className="space-y-4">
               {recommendations?.learningPath.map((step, index) => (
-                <div key={index} style={{
-                  background: 'linear-gradient(to right, #eff6ff, #f1f5f9)',
-                  padding: '20px',
-                  borderRadius: '12px',
-                  border: '1px solid #bfdbfe'
-                }}>
-                  <div style={{ display: 'flex', alignItems: 'flex-start' }}>
-                    <div style={{
-                      flexShrink: 0,
-                      width: '32px',
-                      height: '32px',
-                      background: 'linear-gradient(to bottom right, #2563eb, #1d4ed8)',
-                      color: 'white',
-                      borderRadius: '50%',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      fontWeight: 'bold',
-                      marginRight: '16px',
-                      boxShadow: '0 4px 6px -1px rgba(37, 99, 235, 0.3)'
-                    }}>
+                <div key={index} className="bg-gradient-to-r from-blue-50 to-slate-50 p-4 md:p-5 rounded-lg border border-blue-200">
+                  <div className="flex items-start gap-3 md:gap-4">
+                    <div className="flex-shrink-0 w-8 h-8 bg-gradient-to-br from-blue-600 to-blue-700 text-white rounded-full flex items-center justify-center font-bold shadow-lg">
                       {step.step}
                     </div>
-                    <div style={{ flex: 1 }}>
-                      <h4 style={{ fontSize: '18px', fontWeight: '600', marginBottom: '4px' }}>{step.title}</h4>
-                      <p style={{ color: '#334155', marginBottom: '8px' }}>{step.description}</p>
-                      <p style={{ fontSize: '14px', color: '#2563eb', fontWeight: '600', marginBottom: '8px' }}>
-                        ⏱️ {step.estimatedTime}
-                      </p>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="text-base md:text-lg font-semibold text-slate-900 mb-1">{step.title}</h4>
+                      <p className="text-slate-700 mb-2 text-sm md:text-base">{step.description}</p>
+                      <p className="text-sm text-blue-600 font-medium mb-2">⏱️ {step.estimatedTime}</p>
+                      <div className="space-y-1">
                         {step.resources.map((resource, rIndex) => (
-                          <div key={rIndex} style={{ fontSize: '14px', color: '#64748b' }}>
+                          <div key={rIndex} className="text-sm text-slate-600">
                             • {resource}
                           </div>
                         ))}
@@ -1205,20 +879,13 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
             </div>
           </div>
 
-          {/* Next Steps */}
-          <div style={{
-            background: 'linear-gradient(to right, #f0fdf4, #eff6ff)',
-            padding: '24px',
-            borderRadius: '12px',
-            border: '1px solid #86efac',
-            marginBottom: '24px'
-          }}>
-            <h3 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>{t.nextSteps}</h3>
-            <ul style={{ listStyle: 'none', padding: 0, margin: 0, display: 'flex', flexDirection: 'column', gap: '8px' }}>
+          <div className="bg-gradient-to-r from-green-50 to-blue-50 p-6 rounded-lg border border-green-200 mb-6">
+            <h3 className="text-lg md:text-xl font-bold mb-3 text-slate-900">{t.nextSteps}</h3>
+            <ul className="space-y-2">
               {recommendations?.nextSteps.map((step, index) => (
-                <li key={index} style={{ display: 'flex', alignItems: 'flex-start' }}>
-                  <CheckCircle size={20} style={{ color: '#16a34a', marginRight: '8px', marginTop: '2px', flexShrink: 0 }} />
-                  <span style={{ color: '#334155' }}>{step}</span>
+                <li key={index} className="flex items-start gap-2">
+                  <CheckCircle className="w-5 h-5 text-green-600 mt-0.5 flex-shrink-0" />
+                  <span className="text-slate-700 text-sm md:text-base">{step}</span>
                 </li>
               ))}
             </ul>
@@ -1226,33 +893,21 @@ Provide 6-8 tools, 4-5 learning steps, and 3-4 next steps.`;
 
           <button
             onClick={resetAll}
-            style={{
-              ...styles.button,
-              ...styles.buttonSecondary,
-              width: '100%'
-            }}
+            className="w-full py-3 bg-slate-200 text-slate-700 rounded-lg font-semibold hover:bg-slate-300 transition-all"
           >
             {t.startOver}
           </button>
         </div>
 
-        {/* Footer */}
-        <div style={{ textAlign: 'center', marginTop: '32px' }}>
-          <p style={{ color: '#93c5fd', fontSize: '14px', marginBottom: '8px' }}>
+        <div className="text-center mt-8">
+          <p className="text-blue-200 text-sm mb-2">
             Powered by NEXOVA - Empowering the Next Innovators
           </p>
-          <p style={{ color: '#bfdbfe', fontSize: '12px' }}>
+          <p className="text-blue-300 text-xs">
             AI-generated recommendations personalized to your answers
           </p>
         </div>
       </div>
-
-      <style>{`
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-      `}</style>
     </div>
   );
 }
