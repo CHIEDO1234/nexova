@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Analytics } from "@vercel/analytics/react"
 import { ArrowRight, ArrowLeft, Loader2, CheckCircle, Sparkles, Mail, User, Globe, MapPin } from 'lucide-react';
 
 export default function NexovaApp() {
