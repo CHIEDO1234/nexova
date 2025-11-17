@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Analytics } from "@vercel/analytics/react"
 import { ArrowRight, ArrowLeft, Loader2, CheckCircle, Sparkles, Mail, User, Globe, MapPin } from 'lucide-react';
 
 export default function NexovaApp() {
@@ -350,6 +351,7 @@ export default function NexovaApp() {
   if (currentView === 'landing') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800 flex items-center justify-center p-4">
+      <analytics />
         <div className="w-full max-w-2xl">
           {/* Language Selector */}
           <div className="flex justify-end mb-6">
@@ -509,8 +511,10 @@ export default function NexovaApp() {
   if (currentView === 'questionnaire') {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
-        {/* Header */}
-        <div className="bg-slate-900 border-b border-blue-500/20 shadow-lg">
+      <analytics/>
+{/* Header */}
+{/* Google Analytics tag should be placed in public/index.html or handled via a React effect, not directly in JSX */}
+<div className="bg-slate-900 border-b border-blue-500/20 shadow-lg">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-3">
@@ -772,6 +776,8 @@ export default function NexovaApp() {
   // RESULTS PAGE
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
+{/* Google Analytics tag should be placed in public/index.html or handled via a React effect, not directly in JSX */}
+<analytics />
       <div className="bg-slate-900 border-b border-blue-500/20 shadow-lg">
         <div className="max-w-4xl mx-auto px-4 py-4">
           <div className="flex items-center gap-3">
