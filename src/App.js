@@ -1,5 +1,6 @@
- import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Loader2, CheckCircle, Sparkles, Mail, User, Globe, MapPin, Moon, Sun, Bookmark, BookmarkCheck, FileText } from 'lucide-react';
+import { Analytics } from '@vercel/analytics/react';
 
 export default function NexovaApp() {
   const [currentView, setCurrentView] = useState('landing');
@@ -539,6 +540,7 @@ export default function NexovaApp() {
       <div className={`min-h-screen ${darkMode ? 'bg-gradient-to-br from-slate-900 via-orange-950 to-slate-900' : 'bg-gradient-to-br from-orange-50 via-white to-orange-100'} flex items-center justify-center p-4 transition-colors duration-500`}>
         <div className="w-full max-w-2xl">
           {/* Top Bar with Language and Dark Mode */}
+          <Analytics />
           <div className="flex justify-between items-center mb-6">
             {/* Language Selector */}
             <div className="relative">
