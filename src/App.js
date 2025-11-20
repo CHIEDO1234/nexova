@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { ArrowRight, ArrowLeft, Loader2, CheckCircle, Sparkles, Mail, User, Globe, MapPin, Moon, Sun, Bookmark, BookmarkCheck, FileText } from 'lucide-react';
 import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from "@vercel/speed-insights/react"
 
 export default function NexovaApp() {
   const [currentView, setCurrentView] = useState('landing');
@@ -541,6 +542,7 @@ export default function NexovaApp() {
         <div className="w-full max-w-2xl">
           {/* Top Bar with Language and Dark Mode */}
           <Analytics />
+          <SpeedInsights />
           <div className="flex justify-between items-center mb-6">
             {/* Language Selector */}
             <div className="relative">
