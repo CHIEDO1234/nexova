@@ -744,6 +744,7 @@ export default function NexovaApp() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-blue-900 to-slate-800">
         {/* Header */}
+        <SpeedInsights />
         <div className="bg-slate-900 border-b border-blue-500/20 shadow-lg">
           <div className="max-w-4xl mx-auto px-4 py-4">
             <div className="flex items-center justify-between">
